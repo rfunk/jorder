@@ -10,7 +10,7 @@ jOrder = (function()
 	var jOrder = function(json)
 	{
 		return new jOrder.table(json);
-	}
+	};
 
 	// constants
 	jOrder.version = '1.0.0.8-rfunk';
@@ -43,14 +43,14 @@ jOrder = (function()
 
 		if (window.console)
 		{
-			log = function(msg) { window.console.log(msg); }
-			warn = function(msg) { window.console.warn(msg); }
-			error = function(msg) { window.console.error(msg); }
+			log = function(msg) { window.console.log(msg); };
+			warn = function(msg) { window.console.warn(msg); };
+			error = function(msg) { window.console.error(msg); };
 		}
 		else if (Sys)
-			log = warn = error = function(msg) { Sys.Debug.trace(msg); }
+			log = warn = error = function(msg) { Sys.Debug.trace(msg); };
 		else
-			log = warn = error = function(msg) { window.alert(msg); }
+			log = warn = error = function(msg) { window.alert(msg); };
 
 		var prefix = jOrder.name + ": ";
 		switch (level)
@@ -65,19 +65,19 @@ jOrder = (function()
 				error(prefix + message);
 				break;
 		}
-	}
+	};
 
 	// issues a warning
 	jOrder.warning = function(message)
 	{
 		jOrder.log(message, 1);
-	}
+	};
 
 	// issues an error
 	jOrder.error = function(message)
 	{
 		jOrder.log(message, 2);
-	}
+	};
 
 	// provides a deep copy of a table (array of objects)
 	jOrder.copyTable = function(table, renumber)
@@ -104,7 +104,7 @@ jOrder = (function()
 		}
 
 		return result;
-	}
+	};
 
 	// retrieves the keys of an object
 	jOrder.keys = function(object, values)
@@ -123,7 +123,7 @@ jOrder = (function()
 		for (var key in object)
 			result.push(key);
 		return result;
-	}
+	};
 
 	// gathers the values of an object
 	jOrder.values = function(object)
@@ -132,7 +132,7 @@ jOrder = (function()
 		for (var key in object)
 			result.push(object[key]);
 		return result;
-	}
+	};
 
 	// generates a lookup index on the specified table for the given set of fields
 	// purpose: fast access to rows; no support for sorting and inequality filters
@@ -296,7 +296,7 @@ jOrder = (function()
 				throw "Attempted to compact an unordered index: '" + signature() + "'.";
 
 			// tracing calls to this method as it is expensive
-			jOrder.log("Compacting index '" + signature() + "'.")
+			jOrder.log("Compacting index '" + signature() + "'.");
 			
 			// remove orphan entries
 			for (idx in _order)
@@ -499,7 +499,7 @@ jOrder = (function()
 				return a.key > b.key ? 1 : a.key < b.key ? -1 : 0;
 			});
 		}
-	}
+	};
 
 	// jOrder.table
 	// database-like table object
@@ -609,7 +609,7 @@ jOrder = (function()
 			// update indexes
 			for (var idx in _indexes)
 			{
-				var index = _indexes[idx];
+				index = _indexes[idx];
 				if (before)
 					index.remove(before, rowId);
 				if (after)
@@ -742,7 +742,7 @@ jOrder = (function()
 			if (options.mode == jOrder.startof)
 				return filter(function(row)
 				{
-					0 == row[jOrder.keys(conditions[0])[0]].indexOf(jOrder.values(conditions[0])[0]);
+					return ( 0 == row[jOrder.keys(conditions[0])[0]].indexOf(jOrder.values(conditions[0])[0]) );
 				}, options);
 
 			// exact match
@@ -792,7 +792,8 @@ jOrder = (function()
 				// initializing aggregated row (seed)
 				var group = groupIndex[groupId];
 				var seed;
-				for (var idx in group)
+				var idx;
+				for (idx in group)
 				{
 					seed = _data[group[idx]];
 					break;
@@ -800,7 +801,7 @@ jOrder = (function()
 				var aggregated = initCallback(jOrder.copyTable([seed])[0]);
 
 				// iterating through each row in group
-				for (var idx in group)
+				for (idx in group)
 					aggregated = iterateCallback(aggregated, _data[group[idx]]);
 
 				// adding aggregated group to result
@@ -989,7 +990,7 @@ jOrder = (function()
 					return _indexes[idx];
 			return null;
 		}
-	}
+	};
 
 	return jOrder;
 })();
