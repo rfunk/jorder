@@ -482,11 +482,14 @@ jOrder = (function()
 				return row[_fields[0]].split(' ');
 
 			var key = [];
-			for (var idx in _fields)
+			for (var idx=0; idx<_fields.length; idx++)
 			{
-				if (!(_fields[idx] in row))
+				var field = _fields[idx];
+				if (!(field in row))
 					return null;
-				key.push(row[_fields[idx]]);
+
+				var value = row[field];
+				key.push(value);
 			}
 			return [escape(key.join('_'))];
 		}
