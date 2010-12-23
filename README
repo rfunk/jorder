@@ -2,5 +2,7 @@ jOrder - JavaScript data management redefined
 
 jOrder is a lightweight JavaScript library that supports fast search (including full-text), ordering, and modification on JSON tables.
 
-Latest version: 1.0.0.8 (dev)
+This version allows indexed fields to have array values, so that searching for any of the values inside the array finds the row.
+
+Latest version: 1.0.0.8-rfunk (dev)
 
