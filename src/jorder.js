@@ -40,8 +40,7 @@ jOrder = (function()
 		if (!jOrder.logging)
 			return;
 
-		var log, warn, error, hasSys;
-		try { hasSys = !!(Sys && Sys.Debug); } catch(e) { hasSys = false; }
+		var log, warn, error;
 
 		if (window.console)
 		{
@@ -49,10 +48,17 @@ jOrder = (function()
 			warn = function(msg) { window.console.warn(msg); };
 			error = function(msg) { window.console.error(msg); };
 		}
-		else if (hasSys)
-			log = warn = error = function(msg) { Sys.Debug.trace(msg); };
 		else
-			log = warn = error = function(msg) { window.alert(msg); };
+		{
+			var hasSys = false;
+			try { hasSys = (Sys && Sys.Debug); }
+			catch(e) { hasSys = false; }
+
+            if (hasSys)
+				log = warn = error = function(msg) { Sys.Debug.trace(msg); };
+			else
+				log = warn = error = function(msg) { window.alert(msg); };
+		}
 
 		var prefix = jOrder.name + ": ";
 		switch (level)
