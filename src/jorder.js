@@ -325,17 +325,21 @@ jOrder = (function()
 			var result = [];
 			for (var idx in rows)
 			{
-				var key = _keys(rows[idx])[0];
-				if (!(key in _data))
-					continue;
+				var keys = _keys(rows[idx]);
+				for (var k=0; k<keys.length; k++)
+				{
+					var key = keys[k];
+					if (!(key in _data))
+						continue;
 
-				// index element is either an array or a number
-				var rowIds = _data[key];
-				if ('object' == typeof rowIds)
-					for (var jdx in rowIds)
-						result.push(rowIds[jdx]);
-				else
-					result.push(rowIds);
+					// index element is either an array or a number
+					var rowIds = _data[key];
+					if ('object' == typeof rowIds)
+						for (var jdx in rowIds)
+							result.push(rowIds[jdx]);
+					else
+						result.push(rowIds);
+				}
 			}
 			return result;
 		}
@@ -489,9 +493,66 @@ jOrder = (function()
 					return null;
 
 				var value = row[field];
+				if (! ( (typeof value == 'object') &&
+				        (value instanceof Array  ) ) )
+					value = [value];// not an array, so make it one
 				key.push(value);
 			}
-			return [escape(key.join('_'))];
+
+			var keys = _combo(key);
+			var keystrings = [];
+			for (var j=0; j<keys.length; j++)
+			{
+				var keystring = escape(keys[j].join('_'));
+				keystrings.push(keystring);
+			}
+			return keystrings;
+		}
+
+		// multiply out a 2-dimensional array, e.g.
+		// [ [a,b], [c], [d,e,f] ]
+		// => [ [a,c,d], [a,c,e], [a,c,f], [b,c,d], [b,c,e], [b,c,f] ]
+		function _combo(arr)
+		{
+			var first = arr[0];
+			var rest = arr.slice(1);
+
+			var result = [];
+			for (var i=0; i<first.length; i++)
+			{
+				var subresult = _subcombo(first[i], rest);
+				result = result.concat(subresult);
+			}
+			return result;
+		}
+		// helper for _combo, to combine a factor into a 2D array
+		function _subcombo(factor, rest)
+		{
+			var result = [];
+
+			if (rest.length == 0)
+			{
+				result.push( [factor] );
+			}
+			else if (rest.length == 1)
+			{
+				var subrest = rest[0];
+				for (var i=0; i<subrest.length; i++)
+				{
+					result.push( [factor, subrest[i]] );
+				}
+			}
+			else
+			{
+				var subresult = combo(rest);
+				for (var j=0; j<subresult.length; j++)
+				{
+					var resultElement = [factor].concat(subresult[j]);
+					result.push(resultElement);
+				}
+			}
+
+			return result;
 		}
 
 		// reorders the index
