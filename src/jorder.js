@@ -1,5 +1,6 @@
 ﻿// jOrder on GitHub (source, wiki, donation):
 // http://github.com/danstocker/jorder
+// This version: http://github.com/rfunk/jorder
 //
 // jOrder blog on Wordpress:
 // http://jorder.wordpress.com
