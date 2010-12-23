@@ -13,7 +13,7 @@ jOrder = (function()
 	}
 
 	// constants
-	jOrder.version = '1.0.0.8';
+	jOrder.version = '1.0.0.8-rfunk';
 	jOrder.name = "jOrder";
 	// sorting
 	jOrder.asc = 1;
