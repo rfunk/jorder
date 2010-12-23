@@ -837,7 +837,7 @@ jOrder = (function()
 				return match;
 			}, options);
 
-			return [];
+			//return [];// Not currently reached
 		}
 
 		// aggregates the table using a group index
