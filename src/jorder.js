@@ -33,6 +33,7 @@ jOrder = (function()
 
 	// properties
 	jOrder.logging = true;
+	jOrder.verbose = true;
 
 	// general logging function
 	jOrder.log = function(message, level)
@@ -85,6 +86,21 @@ jOrder = (function()
 	jOrder.error = function(message)
 	{
 		jOrder.log(message, 2);
+	};
+
+	jOrder._throw = function(baseMessage, verboseMessage, object)
+	{
+		var errMsg = baseMessage;
+
+		// Add extra information?
+		if (jOrder.verbose && arguments.length > 1 && verboseMessage) {
+			if (typeof (JSON) == 'object' && JSON && JSON.stringify) {
+				errMsg += ((verboseMessage || '') +
+				           JSON.stringify(object, null, '\t'));
+			}
+		}
+
+		throw errMsg;
 	};
 
 	// provides a deep copy of a table (array of objects)
@@ -191,7 +207,7 @@ jOrder = (function()
 			// obtain keys associated with the row
 			var keys = _keys(row);
 			if (null == keys)
-				throw "Can't add row to index. No field matches signature '" + signature() + "'";
+				jOrder._throw("Can't add row to index. No field matches signature '" + signature() + "'.", "\n\nrow = ", row);
 
 			for (idx in keys)
 			{
@@ -229,7 +245,7 @@ jOrder = (function()
 				{
 					// non-grouped index
 					if (key in _data)
-						throw "Can't add more than one row ID to the non-grouped index '" + signature() + "'. Consider using a group index instead.";
+						jOrder._throw("Can't add more than one row ID to the non-grouped index '" + signature() + "'. Consider using a group index instead.", "\n\nrow = ", row);
 					_data[key] = rowId;
 				}
 			}
